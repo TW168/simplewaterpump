@@ -70,3 +70,34 @@ def get_status(pump_pin):
     GPIO.setup(pump_pin, GPIO.IN)
     GPIO.cleanup()
     return GPIO.input(pump_pin)
+
+
+
+def cleanup_pump_pin():
+    GPIO.cleanup()
+
+
+
+# write data log to csv file in the same folder
+def write_log(st, act, et, notes):
+    '''
+    write_log (start time, activity, end time , notes)
+
+    '''
+    filename='waterlog.csv'
+    file_exists = os.path.isfile(filename)
+    
+    header = ['Epoch', 'Activity', 'RunTime', 'Notes']
+    
+    rows = [[st, act, et, notes]]
+    
+    with open(filename, 'a') as f:
+        csv_writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+        if not file_exists:
+            csv_writer.writerow(header) # write header
+        
+        csv_writer.writerows(rows)
+
+
+# run pump_on function
+pump_on(pump_pin, 2)
